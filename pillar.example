@@ -10,17 +10,14 @@ concourse-ci:
       name: concourse-ci
       reload: True
     external_url: http://concourse-ci.example.com
-    postgress_url: postgres://postgress:password@127.0.0.1/concourse
-    auth:
-      basic:
-        username: 'concourse'
-        password: 'concourse'
     pki:
       host_key_url: salt://certs/tsa_host_key
       session_key_url: salt://certs/session_signing_key
       authorized_worker_cert_urls:
         - salt://certs/worker_key.pub
     options:
+      basic-auth-username: 'concourse'
+      basic-auth-password: 'concourse'
       tsa-bind-ip: 127.0.0.1
   worker:
     service:
