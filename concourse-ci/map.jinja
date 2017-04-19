@@ -31,7 +31,7 @@
           'options': {},
           'tags': [],
           'service': {
-            'name': '{{ grains["id"] }}',
+            'name': {{ grains["id"] }},
             'reload': 'True'
           },
           'tsa_host': '127.0.0.1',
