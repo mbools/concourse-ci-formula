@@ -2,6 +2,7 @@
 
 include:
   - concourse-ci.install
+  - concourse-ci.certs
 
 
 # setup pki certs
