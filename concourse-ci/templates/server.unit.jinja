@@ -1,0 +1,43 @@
+{%- from "concourse-ci/map.jinja" import concourse with context -%}
+{%- set auth = concourse.server.auth -%}
+[Unit]
+Description=concourse server
+
+[Service]
+Type=simple
+ExecStart={{ concourse.install_dir }}/concourse web \
+{%- if auth.github is defined %}
+  --github-auth-client-id {{ auth.github.client_id }} \
+  --github-auth-client-secret {{ auth.github.client_secret }} \
+  --github-auth-team {{ auth.github.team }} \
+{%- elif auth.uaa is defined %}
+  --uaa-auth-client-id {{ auth.uaa.client_id }} \
+  --uaa-auth-client-secret {{ auth.uaa.client_secret }} \
+  --uaa-auth-auth-url {{ auth.uaa.auth_url }} \
+  --uaa-auth-token-url {{ auth.uaa.token_url }} \
+  --uaa-auth-cf-url {{ auth.uaa.cf_url }} \
+  --uaa-auth-cf-ca-cert {{ auth.uaa.cf_ca_cert }} \
+  --uaa-auth-cf-space {{ auth.uaa.cf_space }} \
+{%- elif auth.oath is defined %}
+  --generic-oauth-display-name {{ auth.oath.display_name }} \
+  --generic-oauth-client-id {{ auth.oath.client_id }} \
+  --generic-oauth-client-secret {{ auth.oath.client_secret }} \
+  --generic-oauth-auth-url {{ auth.oath.auth_url }} \
+  --generic-oauth-token-url {{ auth.oath.token_url }} \
+  {%- if auth.oath.auth_url_param is defined %}
+  --generic-oauth-auth-url-param {{ auth.oath.auth_url_param }} \
+  {%- endif %}
+{%- elif auth.basic is defined %}
+  --basic-auth-username {{ auth.basic.username }} \
+  --basic-auth-password {{ auth.basic.password }} \
+{%- endif %}
+  --session-signing-key {{ concourse.pki_dir }}/session_signing_key \
+  --tsa-host-key {{ concourse.pki_dir }}/tsa_host_key \
+  --tsa-authorized-keys {{ concourse.pki_dir }}/authorized_worker_keys \
+  {%- if concourse.server.data_source is defined %}
+  --postgres-data-source {{ concourse.server.data_source }} \
+  {%- endif %}
+  {%- if concourse.server.peer_url is defined %}
+  --peer-url {{ concourse.server.peer_url }} \
+  {%- endif %}
+  --external-url {{ concourse.server.external_url }}

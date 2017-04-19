@@ -1,0 +1,11 @@
+{%- from "concourse-ci/map.jinja" import concourse with context -%}
+[Unit]
+Description=concourse-ci worker
+
+[Service]
+Type=simple
+ExecStart={{ concourse.install_dir }}/concourse worker \
+  --work-dir {{ concourse.worker.work_dir }} \
+  --tsa-host {{ concourse.worker.tsa_host }} \
+  --tsa-public-key {{ concourse.pki_dir }}/tsa_host_key.pub \
+  --tsa-worker-private-key {{ concourse.pki_dir }}/worker_key

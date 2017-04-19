@@ -21,25 +21,26 @@ Available states
 
 Install and configure concourse.ci server and worker.
 
-``concourse-ci.conf``
+``concourse-ci.install``
 ---------------------
 
-Apply configuration.
+Install Concourse CI standalone binaries
+
+``concourse-ci.certs``
+---------------------
+
+Install Concourse CI certificates
 
 ``concourse-ci.server``
 ---------------------
 
-Install and run server
+Install and run server as service. (Currently only `systemd`)
 
 ``concourse-ci.worker``
 ---------------------
 
-Install and run worker
+Install and run worker as service. (Currently only `systemd`)
 
-``concourse-ci.fly``
----------------------
-
-Install fly CLI
 
 
 Template

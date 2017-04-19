@@ -1,0 +1,42 @@
+{% set conf =   {'worker': salt['pillar.get']('concourse-ci:worker', {}) } %}
+{% do conf.update({'server': salt['pillar.get']('concourse-ci:server', {}) }) %}
+{% do conf.update( salt['pillar.get']('concourse-ci:lookup', {}) ) %}
+{% set concourse = salt['grains.filter_by']({
+    'default': {
+        'version': '2.7.1',
+        'config_dir': '/etc/concourse-ci',
+        'pki_dir': '/etc/concourse-ci/certs',
+        'install_dir': '/opt/concourse',
+        'user': 'concourse',
+        'group': 'concourse',
+        'worker': {
+          'work_dir': '/var/concourse-ci'
+        },
+        'server': {
+          'service': {
+            'name': 'concourse-ci',
+            'reload': 'True'
+          },
+          'external_url': 'http://concourse-ci.example.com',
+          'postgress_url': 'postgres://postgress:passord@127.0.0.1/concourse',
+          'auth': {
+            'basic': {
+              'username': 'concourse',
+              'password': 'concourse'
+            }
+          }
+        },
+        'worker': {
+          'service': {
+            'name': '{{ grains["id"] }}',
+            'reload': 'True'
+          },
+          'tsa_host': '127.0.0.1',
+          'work_dir': '/opt/concourse/worker'
+        }
+      },
+    'Debian': {
+      }
+    }, grain='os_family',
+    merge=conf, base='default' )
+%}

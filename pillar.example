@@ -1,0 +1,121 @@
+# server with: local postgress database, basic authentication, and local worker
+
+concourse-ci:
+  lookup:
+    version: 2.7.1
+    config_dir: /etc/concourse-ci
+    pki_dir: /etc/concourse-ci/certs
+  server:
+    service:
+      name: concourse-ci
+      reload: True
+    external_url: http://concourse-ci.example.com
+    postgress_url: postgres://postgress:password@127.0.0.1/concourse
+    auth:
+      basic:
+        username: 'concourse'
+        password: 'concourse'
+    pki:
+      host_key_url: salt://certs/tsa_host_key
+      session_key_url: salt://certs/session_signing_key
+      authorized_worker_cert_urls:
+        - salt://certs/worker_key.pub
+  worker:
+    service:
+      name: concourse-ci-worker
+      reload: True
+    tsa_host: 127.0.0.1
+    working_dir: /opt/concourse/worker
+    pki:
+      worker_key_url: salt://certs/worker_key
+      tsa_host_cert_url: salt://certs/tsa_host_key.pub
+    platform: linux
+    tags:
+      - tag1
+      - tag2
+
+# High availability
+# External postgress instance, multiple servers
+## Each server will have its own internally resolvable peer_url
+#concourse-ci:
+#  lookup:
+#    version: 2.7.1
+#    config_dir: /etc/concourse-ci
+#    pki_dir: /etc/concourse-ci/certs
+#  server:
+#    service: True
+#    name: concourse-ci
+#    reload: True
+#    external_url: http://concourse-ci.example.com
+#    peer_url: http://local-tsa-1
+#    data_source: postgres://user:pass@10.0.1.10/concourse
+#    auth:
+#      basic:
+#        username: 'concourse'
+#        password: 'concourse'
+#
+#
+#
+## Authentication variations
+#
+## server with github oAuth authentication
+#concourse-ci:
+#  lookup:
+#    version: 2.7.1
+#    config_dir: /etc/concourse-ci
+#    pki_dir: /etc/concourse-ci/certs
+#  server:
+#    service: True
+#    name: concourse-ci
+#    reload: True
+#    external_url: http://concourse-ci.example.com
+#    data_source: postgres://user:pass@127.0.0.1/concourse
+#    auth:
+#      github:
+#        client_id:
+#        client_secret:
+#        team:
+#
+## server with uaa/cf oAuth uathentication
+#concourse-ci:
+#  lookup:
+#    version: 2.7.1
+#    config_dir: /etc/concourse-ci
+#    pki_dir: /etc/concourse-ci/certs
+#  server:
+#    service: True
+#    name: concourse-ci
+#    reload: True
+#    external_url: http://concourse-ci.example.com
+#    data_source: postgres://user:pass@127.0.0.1/concourse
+#    auth:
+#      uaa:
+#        client_id:
+#        client_secret:
+#        auth_url:
+#        token_url:
+#        cf_url:
+#        cf_ca_cert:
+#        cf_space:
+#
+## server with generic oAuth authentication
+#concourse-ci:
+#  lookup:
+#    version: 2.7.1
+#    config_dir: /etc/concourse-ci
+#    pki_dir: /etc/concourse-ci/certs
+#  server:
+#    service: True
+#    name: concourse-ci
+#    reload: True
+#    external_url: http://concourse-ci.example.com
+#    data_source: postgres://user:pass@127.0.0.1/concourse
+#    auth:
+#      oauth:
+#        display_name:
+#        client_id:
+#        client_secret:
+#        auth_url:
+#        token_url:
+#        auth_url_param:
+#
