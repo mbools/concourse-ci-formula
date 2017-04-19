@@ -20,6 +20,8 @@ concourse-ci:
       session_key_url: salt://certs/session_signing_key
       authorized_worker_cert_urls:
         - salt://certs/worker_key.pub
+    options:
+      tsa-bind-ip: 127.0.0.1
   worker:
     service:
       name: concourse-ci-worker
@@ -29,7 +31,6 @@ concourse-ci:
     pki:
       worker_key_url: salt://certs/worker_key
       tsa_host_cert_url: salt://certs/tsa_host_key.pub
-    platform: linux
     tags:
       - tag1
       - tag2

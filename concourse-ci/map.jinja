@@ -13,6 +13,7 @@
           'work_dir': '/var/concourse-ci'
         },
         'server': {
+          'options': {},
           'service': {
             'name': 'concourse-ci',
             'reload': 'True'
@@ -27,6 +28,8 @@
           }
         },
         'worker': {
+          'options': {},
+          'tags': [],
           'service': {
             'name': '{{ grains["id"] }}',
             'reload': 'True'

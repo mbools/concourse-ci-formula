@@ -40,4 +40,7 @@ ExecStart={{ concourse.install_dir }}/concourse web \
   {%- if concourse.server.peer_url is defined %}
   --peer-url {{ concourse.server.peer_url }} \
   {%- endif %}
+  {%- for option, value in concourse.server.options.iteritems() %}
+  --{{ option }} {{ value }} \
+  {%- endfor %}
   --external-url {{ concourse.server.external_url }}
