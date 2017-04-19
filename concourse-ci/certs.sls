@@ -1,6 +1,6 @@
 {% from "concourse-ci/map.jinja" import concourse with context %}
 
-{%- if concourse.server is defined %}
+{%- if concourse.server.pki is defined %}
 {{ concourse.pki_dir }}/tsa_host_key:
   file.managed:
     {%- if concourse.server.pki.host_key_url is defined %}
@@ -45,7 +45,7 @@ populate {{ concourse.pki_dir }}/authorized_worker_keys:
     {%- endif %}
 {%- endif %}
 
-{%- if concourse.worker is defined %}
+{%- if concourse.worker.pki is defined %}
 {{ concourse.pki_dir }}/worker_key:
   file.managed:
     {%- if concourse.worker.pki.worker_key_url is defined %}
